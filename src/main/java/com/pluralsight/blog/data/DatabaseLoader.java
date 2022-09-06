@@ -2,6 +2,7 @@ package com.pluralsight.blog.data;
 
 import com.pluralsight.blog.model.Author;
 import com.pluralsight.blog.model.Post;
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,15 +21,24 @@ public class DatabaseLoader implements ApplicationRunner {
 
     private final PostRepository postRepository;
 
+    private final AuthorRepository authorRepository;
     public List<Post> randomPosts = new ArrayList<>();
     public List<Author> authors = new ArrayList<>();
     @Autowired
-    public DatabaseLoader(PostRepository postRepository) {
+    public DatabaseLoader(PostRepository postRepository, AuthorRepository authorRepository) {
         this.postRepository = postRepository;
+        this.authorRepository = authorRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        authors.addAll(Arrays.asList(
+            new Author("sholderness", "Sarah",  "Holderness", "password"),
+            new Author("tbell", "Tom",  "Bell", "password"),
+            new Author("efisher", "Eric",  "Fisher", "password"),
+            new Author("csouza", "Carlos",  "Souza", "password")
+        ));
+        authorRepository.saveAll(authors);
         IntStream.range(0,40).forEach(i->{
             String template = templates[i % templates.length];
             String gadget = gadgets[i % gadgets.length];
